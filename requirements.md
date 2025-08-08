@@ -1,0 +1,2 @@
+- python
+- any IDE that support python (I personally use pyCharm)

@@ -1,0 +1,1 @@
+# On this repository: [ai-prompt-showcase](https://github.com/noviirna/ai-prompt-showcase)
