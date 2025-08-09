@@ -72,3 +72,74 @@ language for foundation model: chat, text, code
 ### Additional Resources
 - /resources/G-GENAI-I-m1-l2-en-file-2.en.pdf
 ----
+
+## 2. [Introduction to LLM](https://www.cloudskillsboost.google/paths/118/course_templates/539)
+### LLM
+LLM: a subset of deep learning. large general purpose language models that can be pre-trained and fine-tuned for specific purposes
+
+Chain of thought reasoning: models tend to be better at getting right answer when the first output explains the reason for the answer.
+
+3 Major features LLM
+- Large -> refer to number of: training dataset, parameters
+- General Purpose -> model can solve common problems by commonality human languages and resource constraints
+- Pretrained and fine-tuned -> pretrain a LLM for a general purpose with a large dataset and then fine tune it for specific purpose with smaller dataset
+
+Use cases & predominance than other model:
+- Single models can solve multiple tasks
+- Require minimal training data when tailored
+- Decent performance with minimal training data
+- Can be used for few-shot (model trained with minimal data) or even zero-shot scenario (model that can recognize things that haven't been learned)
+- performance is improved with more training data & parameter
+
+LLM is based on transformer models.
+
+Transformer model, has:
+- encoder (encode the input so it can be processed by decoder and pass it to decoder)
+- decoder (process it so the model can give output)
+
+It allows system to perform tasks without having to code it explicitly.
+
+Predominance LLM vs traditional ML :
+- No ML expertise
+- No training example
+- No need to train a mode
+- Only need to know about prompt design -> design a prompt that clear concise informative. important part of NLP.
+
+3 Model Type of LLM:
+- Generic: predict the next word based on language on the training data. like how to create a coherent sentences. like an autocomplete. Task specific model is more reliable than generic model.
+- Instruction-tuned: trained to predict based on the instruction in the input. example prompt: summarize the documents into a presentation notes
+- Dialogue: trained to have a dialogue by predicting next response. for example: chatbot that is tuned to answer FAQ. works better with natural question-like phrasings.
+
+### NLP & Prompting
+QA is a subfield of NLP that deal with task of automatically answering questions in natural language. It is trained with large amount of text and code, can answer wide range of questions. You need a domain knowledge (the dictionary) to develop QA models.
+
+There are also generative QA, which no need domain knowledge to develop it, it only needs the context and generate the answers along the context.
+
+Prompt Design :
+- creating tailored prompt for specific task the system need to  perform
+- for wide general usage
+
+Prompt Engineering :
+- creating tailored prompt to improve performance
+- necessary for system that need high accuracy or performance
+
+### Tuning
+Tuning: adapting the model to new use case by training model on new data. to customize the model's response.
+
+Type of tuning:
+- Fine-tuning: re-train model and tuning every weight in the llm. require a training job and hosting your own model. it is expensive.
+- PETM: turning LLM on your own custom data without duplicating the model. more efficient than fine-tuning.
+- Prompt tuning: adjust the prompt, the easiest PETM.
+
+### Google's product related:
+- Vertex AI studio to create & deploy, gen AI model, with various tools.
+- Vertex AI (no code AI model builder)
+
+### Glossary
+- LLM: Large Language Model
+- NLP: Natural Language Processing
+- QA: Question Answering
+- PETM: parameter efficient tuning method
+
+### Additional Resource
+- G-LLM-I-m0-l2-en-file-2.en.pdf
