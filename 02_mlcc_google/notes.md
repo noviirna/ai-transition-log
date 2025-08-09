@@ -75,7 +75,7 @@ language for foundation model: chat, text, code
 
 ## 2. [Introduction to LLM](https://www.cloudskillsboost.google/paths/118/course_templates/539)
 ### LLM
-LLM: a subset of deep learning. large general purpose language models that can be pre-trained and fine-tuned for specific purposes
+LLM: a subset of deep learning. large general purpose language models that can be pre-trained and fine-tuned for specific purposes. generate natural sounding language
 
 Chain of thought reasoning: models tend to be better at getting right answer when the first output explains the reason for the answer.
 
