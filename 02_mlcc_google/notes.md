@@ -143,3 +143,39 @@ Type of tuning:
 
 ### Additional Resource
 - G-LLM-I-m0-l2-en-file-2.en.pdf
+
+## 3. [Introduction to Responsible AI](https://www.cloudskillsboost.google/paths/118/course_templates/554)
+Developing responsible AI requires understanding of:
+- possible issues
+- limitations
+- unintended conseuences
+
+AI may replicate existing issues in society or even amplify it.
+
+Each organization can define their own principle of responsible AI. Most of them cover these principle:
+- transparency
+- fairness
+- accountability
+- privacy
+
+Google's values on responsible AI:
+- built for everyone
+- accountable and safe
+- respect privacy
+- driven by scientific excellence
+
+Machine is not the decision maker in AI. People involved in AI development is. They collect data, deploy, and apply the system.
+
+Responsible AI development & usage is important because AI can affect society, daily lives, so it is needs to have ethics / code of conduct. Without it, it can cause ethical issues or unintended outcomes. The ethics can guide AI design to be more beneficial to people's live.
+
+3 Google principles on Responsible AI in practices
+- AI that grounded in bold innovation to empower people & society
+- Responsible development and deployment
+- Collaborative progress
+
+### Glossary
+- 
+
+### Additional Resource
+- 
+
