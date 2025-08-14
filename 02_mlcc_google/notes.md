@@ -179,3 +179,26 @@ Responsible AI development & usage is important because AI can affect society, d
 ### Additional Resource
 - 
 
+## 3. [Hand-on Lab Google Vertex AI](https://www.cloudskillsboost.google/paths/118/course_templates/976)
+
+During these sessions, I tried some of the Google Vertex AI features, from the no code tools and also the SDK/API.
+
+We can build AI model from code with various programming languages and connected through Google's SDK for those who are familiar with coding.
+
+For those who have zero experience in coding, Google Vertex AI studio give you capabilities building AI model, chatbot, etc. using Prompt Design.
+
+I have been exploring these stuffs for 3 days and found these insight:
+1. For those who want to focus on LLM, you can use Vertex AI Studio, and focus on learning Prompt Design & Engineering.
+2. For those who want to focus on learning how to integrate AI with code, you can explore more on Vertex Workbench and the API + SDK. I left the useful link for exploring below.
+
+At the end of the course, the course give you some tasks to solve. I find it challenging enough for those who just got into AI and want to find out which field they want to get deep into.
+
+### Additional Resources (Code / Software Engineering focused)
+- [Github Repository - GCP Gen AI](https://github.com/GoogleCloudPlatform/generative-ai)
+- [API & SDK Guide - Google Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference)
+- [Sample SDK usage in various programming languages](https://cloud.google.com/vertex-ai/generative-ai/docs/samples?doctype=sample&language=python%2Cgolang%2Cnodejs%2Ccsharp%2Cjava%2Ccpp&product=googlegenaisdk)
+- [Google Vertex AI python notebooks](https://cloud.google.com/vertex-ai/generative-ai/docs/samples?doctype=notebook&language=python&product=generativeaionvertexai)
+
+### Additional Resources (LLM focused)
+- [Prompt Design Guide for Google Vertex AI Studio](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/introduction-prompt-design)
+- [Prompt Gallery](https://cloud.google.com/vertex-ai/generative-ai/docs/prompt-gallery)
