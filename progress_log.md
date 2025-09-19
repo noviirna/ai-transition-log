@@ -1,9 +1,11 @@
 # Progress Log
 
+### Fri, Sept 19, 2025
+- Over the last two weeks, I've occasionally delved into basic of Python and have now started a new mini-project focused on web scraping and AI integration. I apologize for the lack of updates on my learning sessions here; I've been dealing with a recent health relapse and some family bereavement events.
+- I've also been reading "Designing Data-Intensive Applications" by Martin Kleppmann in my spare time. I haven't finished it, but I've noticed that I've already implemented some of the material in my previous employment. For anyone who manages large-scale, data-intensive web applications that require high reliability and performance, I definitely recommend this book. [Here is a link to get the book](https://www.amazon.com/gp/product/B06XPJML5D?ref=knfdg_R_pape_pew)
+
 ### Sat, August 30, 2025
-- Get back to re-learning python square (from book Python Crash Course by Eric Matthes), after I had to support my family during tough times and bereavement period.
-Some of my family member hospitalized, and one of them ended up passed away last week.
-Hopefully I can get back again on track while still grieving and helping my family by part-time caretaking the kids (my nephews and nieces) and the sick family member.
+- Getting back to re-learning Python (from the book Python Crash Course by Eric Matthes), after I had to support my family during a tough time and a period of bereavement. Some of my family members were hospitalized, and one of them passed away last week. Hopefully, I can get back on track while still grieving and helping my family by part-time caretaking for the kids (my nephews and nieces) and the sick family member. (edited for clarity 19092025 - the grammar on previous update was a bit scrambled)
 
 ###  Fri, August 8, 2025
 - Uploading study plan structure to GitHub
