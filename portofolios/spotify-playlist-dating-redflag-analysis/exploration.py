@@ -1,13 +1,15 @@
+import json
 import time
 import traceback
 
 import validators
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver import Keys, ActionChains
+from selenium.webdriver.common.by import By
 from validators import ValidationError
 
 
-def validate_url(url_to_validate):
+def validate_url(url_to_validate: str):
     print("validating url start")
     try:
         result = validators.url(url_to_validate)
@@ -19,65 +21,155 @@ def validate_url(url_to_validate):
     finally:
         print("validating url finish")
 
-def scrape_spotify_playlist_page(playlist_url):
+
+def setup_chromedriver():
+    # Create the webdriver object and pass the arguments
+    options = webdriver.ChromeOptions()
+    # options.add_argument('--headless') # enable this argument to hide the chrome browser UI
+    options.add_argument("--ignore-certificate-errors")
+    options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
+
+    # Startup the chrome webdriver
+    # pass the chrome options as parameters.
+    return webdriver.Chrome(options=options)
+
+
+def scroll_down_element_until_end(driver: webdriver, by: By, elementName: str):
+    print("scrolling down element")
     try:
-        # create an empty list variable to put the scraping results
+        print("begin scroll down")
+        (ActionChains(driver)
+         .click(driver.find_element(by=by, value=elementName))
+         .perform())
+        time.sleep(1)
+        # note: the scrolling is working visually but the browser won't load the desired API
+        # unlike when performing scroll manually
+        # next maybe we are going to try to scroll using JS driver
+        (ActionChains(driver)
+         .send_keys(Keys.END)
+         .perform())
+        time.sleep(1)
+    except:
+        # pass through exception can't send keys
+        pass
+    finally:
+        print("finish scroll down")
+        time.sleep(10)
+
+
+def process_logs(driver: webdriver.Chrome):
+    print("begin processing logs")
+    scraped_datas = []
+
+    try:
+        # Gets all the logs from performance in Chrome
+        log_entries = driver.get_log("performance")
+
+        # temporary json file for analying the API calls
+        # after knowing how to filter the data, this will no longer be used
+        with open("request_sent.json", "w", encoding="utf-8") as file:
+            print("begin writing to file")
+            file.write("[ ")
+
+            for log_entry in log_entries:
+                message_data = json.loads(log_entry["message"])["message"]
+
+                if message_data.get("method", "") != "Network.requestWillBeSent": continue
+
+                params = message_data.get("params", {})
+
+                if (params.get("request", {}).get("method", "") != "POST"): continue
+
+                requestId = params.get("requestId", "")
+
+                try:
+                    temp = driver.execute_cdp_cmd('Network.getResponseBody', {'requestId': requestId})
+                    if temp is None: continue
+
+                    responseBody = json.loads(temp.get("body", {}))
+
+                    if responseBody == {} or responseBody is None: continue
+
+                    requestBody = json.loads(
+                        driver.execute_cdp_cmd('Network.getRequestPostData', {'requestId': requestId}).get(
+                            "postData", {}))
+
+                    operationName = requestBody.get("operationName", "")
+                    if operationName != "fetchPlaylist" and operationName != "fetchPlaylistContents":
+                        continue
+
+                    scraped_datas.append(
+                        responseBody.get("data", {}).get("data", {})
+                    )
+
+                    jsonData = {}
+                    jsonData['request'] = (requestBody)
+                    jsonData['response'] = (responseBody)
+                    file.write(json.dumps(jsonData) + ",")
+
+                except Exception:
+                    print("found error when writing file, skip it")
+                    print(traceback.format_exception_only())
+                    continue
+
+            file.write("{} ]")
+            print("finished writing to file")
+
+    finally:
+        print("finish processing logs")
+        return scraped_datas
+
+
+def scrape_spotify_playlist_page(playlist_url: str):
+    try:
+        # Create an empty list variable to put the scraping results
         song_collections = []
 
         # Validate spotify URL
         if validate_url(playlist_url) is False:
             print("Invalid URL, can't proceed to continue process")
-            return "No Result"
+            return song_collections
 
-        # Configure WebDriver to use headless Firefox
-        options = Options()
-        options.add_argument('-headless')
-        options.add_experimental_option("detach", True)
+        # Set up the Web Driver
+        seleniumDriver = setup_chromedriver()
 
-
-        seleniumDriver = webdriver.Chrome(options=options)
-
-        # Get the URL given
+        # Load the page
         print("begin loading page")
         seleniumDriver.get(playlist_url)
+        time.sleep(10)  # to ensure the page is fully loaded, esp when the internet connection is slow
         print("finish loading page")
 
-        # scroll until recommended track section show to ensure all URL is loaded
-        print("begin scroll down")
-        seleniumDriver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)
-        print("finish scrol down")
+        # Scroll until recommended track section show to ensure all URL is loaded
+        scroll_down_element_until_end(seleniumDriver,
+                                      By.CLASS_NAME,
+                                      'c55UACltdzzDDQVfoF18')
 
-        ## my PC had some issues with the chrome driver, and unable to run it, now I am exploring other methods to continue this mini project
+        # Filter data from API, this approach chosen because there are no identifier in UI
+        song_collections = process_logs(seleniumDriver)
 
-        # search result from API with
-        #       uri: https://api-partner.spotify.com/pathfinder/v2/query
-        #       request body: operationName: fetchPlaylist
-        #       this is a single hit API
-
-        # search result from API with
-        #       uri: https://api-partner.spotify.com/pathfinder/v2/query
-        #       request body: operationName: fetchPlaylistContents
-        #       this is a multiple hit API
-
-        # list all the songs and artists of a playlist
-
-        seleniumDriver.quit()
         return song_collections
     except Exception:
         print(traceback.format_exc())
-        return song_collections
+    finally:
+        print("end")
+        seleniumDriver.quit()
 
 
-def ai_analysis(spotify_playlist_url):
+def build_prompt(songs_collections: list):
+    return ""
+
+
+def ai_analysis(spotify_playlist_url: str):
     try:
         song_collections = scrape_spotify_playlist_page(spotify_playlist_url)
 
-        # build prompt from song_collections
-
-        # integrate with AI model to analyze basic personality, attachment style prediction, based from the song_collections
         if len(song_collections) == 0:
             return "No Result, please try again with a different URL"
+
+        # build prompt from song_collections
+        prompt = build_prompt(song_collections)
+
+        # integrate with AI model to analyze basic personality, attachment style prediction, based from the song_collections
 
         return "This is the result"
     except:

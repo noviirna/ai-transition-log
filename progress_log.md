@@ -1,5 +1,12 @@
 # Progress Log
 
+### Mon, Sept 22, 2025
+
+- Continued the fun project of integrating a web scraper with AI model, learnt how to scrape data from a website's
+  network traffic. This session focused more on learning Python and data scraping. The AI model configuration will be
+  set up once we have the scraped data from the target website (on this project is spotify).
+- Todo: AI prompt builder, setup AI model on google vertex, refactor the project file if it get more than 500 lines (split it to specific domain of implementation, example: data-scraping logic and ai sdk configuration is separated)
+
 ### Fri, Sept 19, 2025
 - Over the last two weeks, I've occasionally delved into basic of Python and have now started a new mini-project focused on web scraping and AI integration. I apologize for the lack of updates on my learning sessions here; I've been dealing with a recent health relapse and some family bereavement events.
 - I've also been reading "Designing Data-Intensive Applications" by Martin Kleppmann in my spare time. I haven't finished it, but I've noticed that I've already implemented some of the material in my previous employment. For anyone who manages large-scale, data-intensive web applications that require high reliability and performance, I definitely recommend this book. [Here is a link to get the book](https://www.amazon.com/gp/product/B06XPJML5D?ref=knfdg_R_pape_pew)
