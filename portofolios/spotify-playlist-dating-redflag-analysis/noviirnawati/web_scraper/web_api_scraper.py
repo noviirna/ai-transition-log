@@ -1,16 +1,20 @@
 import time
+import traceback
 
+from selenium import webdriver
+from selenium.common import ElementNotInteractableException
 from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 
-from url_validator import *
-from web_api_netlog_processor import *
+from .web_api_netlog_processor import process_netlogs
+from ..constant.constant import Spotify
+from ..helper.validator import validate_url
 
 
-def setup_chromedriver():
+def get_chromedriver():
     # Create the webdriver object and pass the arguments
     options = webdriver.ChromeOptions()
-    # options.add_argument('--headless') # enable this argument to hide the chrome browser UI
+    options.add_argument('--headless') # disable this argument to show the Chrome browser UI
     options.add_argument("--ignore-certificate-errors")
     options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
 
@@ -19,22 +23,22 @@ def setup_chromedriver():
     return webdriver.Chrome(options=options)
 
 
-def scroll_down_element_until_end(driver: webdriver, by: By, elementName: str):
+def scroll_down_element_until_end(driver: webdriver.Chrome, by: str, element_name: str):
     print("scrolling down element")
     try:
         print("begin scroll down")
         (ActionChains(driver)
-         .click(driver.find_element(by=by, value=elementName))
+         .click(driver.find_element(by=by, value=element_name))
          .perform())
         time.sleep(1)
         # note: the scrolling is working visually but the browser won't load the desired API
         # unlike when performing scroll manually
-        # next maybe we are going to try to scroll using JS driver
+        # next maybe we are going to try to scroll using JS driver !TODO!
         (ActionChains(driver)
          .send_keys(Keys.END)
          .perform())
         time.sleep(1)
-    except:
+    except ElementNotInteractableException:
         # pass through exception can't send keys
         pass
     finally:
@@ -48,30 +52,29 @@ def scrape_spotify_playlist_page(playlist_url: str):
         song_collections = []
 
         # Validate spotify URL
-        if validate_url(playlist_url) is False:
+        if not validate_url(playlist_url):
             print("Invalid URL, can't proceed to continue process")
             return song_collections
 
         # Set up the Web Driver
-        seleniumDriver = setup_chromedriver()
+        driver = get_chromedriver()
 
         # Load the page
         print("begin loading page")
-        seleniumDriver.get(playlist_url)
+        driver.get(playlist_url)
         time.sleep(10)  # to ensure the page is fully loaded, esp when the internet connection is slow
         print("finish loading page")
 
         # Scroll until recommended track section show to ensure all URL is loaded
-        scroll_down_element_until_end(seleniumDriver,
+        scroll_down_element_until_end(driver,
                                       By.CLASS_NAME,
-                                      'c55UACltdzzDDQVfoF18')
+                                      Spotify.ELEMENT_SELECTED)
 
         # Filter data from API, this approach chosen because there are no identifier in UI
-        song_collections = process_netlogs(seleniumDriver)
-
+        song_collections = process_netlogs(driver)
+        driver.quit()
         return song_collections
     except Exception:
-        print(traceback.format_exc())
+        traceback.print_exc()
     finally:
         print("end")
-        seleniumDriver.quit()
