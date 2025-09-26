@@ -6,7 +6,7 @@ from selenium.common import ElementNotInteractableException
 from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 
-from .web_api_netlog_processor import process_netlogs
+from .web_api_netlog_processor import process_network_logs
 from ..constant.constant import Spotify
 from ..helper.validator import validate_url
 
@@ -14,7 +14,7 @@ from ..helper.validator import validate_url
 def get_chromedriver():
     # Create the webdriver object and pass the arguments
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless') # disable this argument to show the Chrome browser UI
+    options.add_argument('--headless')  # disable this argument to show the Chrome browser UI
     options.add_argument("--ignore-certificate-errors")
     options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
 
@@ -71,7 +71,7 @@ def scrape_spotify_playlist_page(playlist_url: str):
                                       Spotify.ELEMENT_SELECTED)
 
         # Filter data from API, this approach chosen because there are no identifier in UI
-        song_collections = process_netlogs(driver)
+        song_collections = process_network_logs(driver)
         driver.quit()
         return song_collections
     except Exception:

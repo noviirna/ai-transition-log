@@ -4,12 +4,15 @@ import traceback
 from selenium import webdriver
 from selenium.common import WebDriverException
 
+from ..config.base_configuration import (OUTPUT_FILENAME_SONGS_DETAILS, OUTPUT_FILENAME_API_DETAILS,
+                                         DATA_SCRAPING_SAVE_API_DETAILS, DATA_SCRAPING_SAVE_SONGS_DETAILS)
 from ..constant.constant import (ChromeDevToolProtocol as CDP,
                                  Generic,
                                  HttpMethod,
                                  NetworkLogs as CONSTANT,
                                  Spotify)
 from ..helper.validator import str_is_empty_or_none, dct_is_empty_or_none
+from ..helper.writer import write_output_to_json
 from ..model.model import PlaylistItem
 
 
@@ -40,43 +43,45 @@ def operation_name_is_allowed(operation_name: str) -> bool:
             and operation_name != Spotify.REQ_PARAM_FETCH_PLAYLIST_NEXT_PAGE)
 
 
-## todo: there are still something missing in this method that makes the filters not works
-def filter_playlist_items(filtered_network_logs: dict) -> list[PlaylistItem]:
-    song_details = []
-    for log in filtered_network_logs:
-        items = (log.get(CONSTANT.KEY_DATA, {})
-                 .get('playlistV2', {})
-                 .get('content', {})
-                 .get('items', []))
-        if len(items) > 0:
-            for item in items:
-                detail = item.get('itemV2', {}).get('data', {})
-                title = detail.get('name', Generic.EMPTY_STRING)
-                artist = detail.get('artists', {}).get('items', [])
-                song_details.append(PlaylistItem(title, process_artist_names(artist)))
-        else:
-            print("items is empty")
-
-    print(song_details)
-    with (open("songs_details.json", "w", encoding="utf-8") as f):
-        f.write(json.dumps(song_details))
-
-    return song_details
-
-
-def process_artist_names(artists: list[dict]) -> str:
+def process_artists_names(artists: list[dict]) -> str:
     if len(artists) == 0:
         return 'Unknown'
 
-    artists = ""
+    names = ''
     for artist in artists:
-        name = artist.get('profile', {}).get('name', Generic.EMPTY_STRING)
-        if (str_is_empty_or_none(name)): continue
-        artists += name
-        artists += Generic.COMMA_STRING
+        name = artist.get(Spotify.KEY_PROFILE, {}).get(Spotify.KEY_NAME, Generic.EMPTY_STRING)
+        if str_is_empty_or_none(name): continue
+        names += name
+        names += Generic.COMMA_STRING
+        names += Generic.WHITESPACE
 
-    artists = artists.rstrip(Generic.COMMA_STRING)
-    return artists
+    names = names.rstrip(Generic.COMMA_STRING + Generic.WHITESPACE)
+    return names
+
+
+def filter_playlist_items(filtered_network_logs: list[dict]) -> list[PlaylistItem]:
+    song_details = []
+    for log in filtered_network_logs:
+        items = (log
+                 .get(CONSTANT.KEY_RESPONSE, {})
+                 .get(Spotify.KEY_DATA, {})
+                 .get(Spotify.KEY_PLAYLIST_V2, {})
+                 .get(Spotify.KEY_CONTENT, {})
+                 .get(Spotify.KEY_ITEMS, []))
+        if len(items) > 0:
+            for item in items:
+                detail = item.get(Spotify.KEY_ITEM_V2, {}).get(Spotify.KEY_DATA, {})
+                title = detail.get(Spotify.KEY_NAME, Generic.EMPTY_STRING)
+                artists = detail.get(Spotify.KEY_ARTISTS, {}).get(Spotify.KEY_ITEMS, [])
+                song_details.append(PlaylistItem(title, process_artists_names(artists)))
+
+            if DATA_SCRAPING_SAVE_SONGS_DETAILS:
+                write_output_to_json(OUTPUT_FILENAME_SONGS_DETAILS,
+                                     json.dumps(song_details, default=lambda o: o.encode()))
+        else:
+            print("items is empty")
+
+    return song_details
 
 
 def filter_network_logs(driver: webdriver.Chrome) -> list[dict]:
@@ -119,20 +124,19 @@ def filter_network_logs(driver: webdriver.Chrome) -> list[dict]:
             traceback.print_exc()
             continue
 
-    datas = datas.rstrip(",")
+    datas = datas.rstrip(Generic.COMMA_STRING)
     datas += "]"
 
-    # write the json for analyzing the logic only
-    with (open("api_details.json", "w", encoding="utf-8") as file):
-        file.write(datas)
+    if DATA_SCRAPING_SAVE_API_DETAILS:
+        write_output_to_json(OUTPUT_FILENAME_API_DETAILS, datas)
 
     return json.loads(datas)
 
 
-def process_netlogs(driver: webdriver.Chrome) -> list:
+def process_network_logs(driver: webdriver.Chrome) -> list[PlaylistItem]:
     # Filter only relevant traffic from network logs
-    processed_netlogs = filter_network_logs(driver)
+    filtered_logs = filter_network_logs(driver)
 
     # Filter so you only get the song and
-    final_result = filter_playlist_items(processed_netlogs)
+    final_result = filter_playlist_items(filtered_logs)
     return final_result

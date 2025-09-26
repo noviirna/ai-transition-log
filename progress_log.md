@@ -1,8 +1,14 @@
 # Progress Log
 
+### Fri, Sept 26, 2025
+- Continued the project of integrating a web scraper with an AI model. This session focused on finalizing the logic of
+  the data scraper, configuring environment variables, cleaning up some warnings, and create skeleton code for the SDK configuration.
+- Updating the README.md on the mini project
+- Todo: AI prompt builder, which consist of -> Setting up SDK Project, Exploring Prompt Tuning, Exploring Model Content Generation Config Tuning
+
 ### Thu, Sept 25, 2025
 - Continued the project of integrating a web scraper with an AI model. This session focused on learning Python module management and implementing best practices for clean code. The primary goal was to refactor the existing codebase into a more modular structure, which is easier to maintain, and to set up some running configuration documentation.
-- Todo: AI prompt builder, setup AI model on google vertex, finalize the filter for scraped data
+- Todo: AI prompt builder, finalize the filter for scraped data
 
 ### Mon, Sept 22, 2025
 
