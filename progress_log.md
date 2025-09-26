@@ -4,6 +4,7 @@
 - Continued the project of integrating a web scraper with an AI model. This session focused on finalizing the logic of
   the data scraper, configuring environment variables, cleaning up some warnings, and create skeleton code for the SDK configuration.
 - Updating the README.md on the mini project
+- Moving the portofolio to different repository
 - Todo: AI prompt builder, which consist of -> Setting up SDK Project, Exploring Prompt Tuning, Exploring Model Content Generation Config Tuning
 
 ### Thu, Sept 25, 2025
