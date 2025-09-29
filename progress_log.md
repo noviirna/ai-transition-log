@@ -1,5 +1,8 @@
 # Progress Log
 
+### Mon, Sept 29, 2025
+- Finished fun project integration web scraper with Gen AI. This session focused on prompt engineering to get the most relevant result from the AI model. [**see the result here**](https://github.com/noviirna/spotify-playlist-dating-redflag-analysis)
+
 ### Fri, Sept 26, 2025
 - Continued the project of integrating a web scraper with an AI model. This session focused on finalizing the logic of
   the data scraper, configuring environment variables, cleaning up some warnings, and create skeleton code for the SDK configuration.
